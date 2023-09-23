@@ -29,3 +29,17 @@ If you want to contribute or make modifications to the game, follow these steps:
 
    ```bash
    git clone https://github.com/sid-lakhani/tic-tac-toe.git
+
+2. Install the necessary dependencies:
+
+   ```bash
+   pip install pygame
+   
+3. Make your changes to the code.
+
+4. Test your changes locally:
+
+   ```bash
+   python tictactoe.py
+
+5. If everything works as expected, create a pull request to submit your changes.
