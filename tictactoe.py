@@ -142,7 +142,7 @@ while running:
         if event.type == MOUSEBUTTONDOWN and clicked == False:
                 clicked = True
         if event.type == pygame.MOUSEBUTTONUP and clicked == True:
-            clicked == False
+            clicked == False    
             pos = pygame.mouse.get_pos()
             if again_rect.collidepoint(pos):
                 markers = []
