@@ -15,7 +15,7 @@ This is a basic implementation of the classic Tic Tac Toe game created with Pyth
 ## Usage
 
 1. Download the executable file:
-   - [Download for Windows (exe)](https://github.com/sid-lakhani/Tic-Tac-Toe/releases/download/tic-tac-toe/tictactoe.exe)
+   - Download for Windows: [tictactoe.exe](https://github.com/sid-lakhani/Tic-Tac-Toe/releases/download/tic-tac-toe/tictactoe.exe)
 
 2. Run the downloaded executable to start the game.
 
