@@ -44,34 +44,20 @@ class TicTacToe:
                     pygame.draw.circle(self.screen, self.red, (x * 200 + 100, y * 200 + 100), 85, self.line_width * 2)
 
     def check_winner(self):
-        for i in range(3):
-            row_sum = sum(self.markers[i])
-            if row_sum == 3:
-                self.winner = 1
-                self.game_over = True
-            elif row_sum == -3:
-                self.winner = 2
-                self.game_over = True
-                
-            col_sum = self.markers[0][i] + self.markers[1][i] + self.markers[2][i]
-            if col_sum == 3:
-                self.winner = 1
-                self.game_over = True
-            elif col_sum == -3:
-                self.winner = 2
-                self.game_over = True
-
-        diag1 = self.markers[0][0] + self.markers[1][1] + self.markers[2][2]
-        diag2 = self.markers[2][0] + self.markers[1][1] + self.markers[0][2]
+        lines = list(self.markers)
+        lines.extend([[self.markers[j][i] for j in range(3)] for i in range(3)])
+        lines.append([self.markers[i][i] for i in range(3)])
+        lines.append([self.markers[i][2 - i] for i in range(3)])
         
-        if diag1 == 3 or diag2 == 3:
-            self.winner = 1
-            self.game_over = True
-        elif diag1 == -3 or diag2 == -3:
-            self.winner = 2
-            self.game_over = True
+        for line in lines:
+            if sum(line) == 3:
+                self.winner, self.game_over = 1, True
+                return
+            elif sum(line) == -3:
+                self.winner, self.game_over = 2, True
+                return
 
-        if not self.game_over and all(self.markers[i][j] != 0 for i in range(3) for j in range(3)):
+        if all(cell != 0 for row in self.markers for cell in row):
             self.game_over = True
             self.winner = 0
 
