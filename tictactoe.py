@@ -9,12 +9,13 @@ class TicTacToe:
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption("Tic Tac Toe")
         
-        self.line_width = 6
-        self.green = (0, 255, 0)
-        self.red = (255, 0, 0)
-        self.blue = (0, 0, 255)
-        self.bg_color = (255, 255, 200)
-        self.grid_color = (50, 50, 50)
+        self.line_width = 8
+        self.x_color = (80, 250, 123)
+        self.o_color = (255, 85, 85)
+        self.text_color = (248, 248, 242)
+        self.bg_color = (28, 30, 38)
+        self.grid_color = (68, 71, 90)
+        self.panel_color = (40, 42, 54)
         
         self.font = pygame.font.SysFont(None, 40)
         self.again_rect = pygame.Rect(self.screen_width // 2 - 80, self.screen_height // 2 + 10, 160, 50)
@@ -38,10 +39,10 @@ class TicTacToe:
         for x, row in enumerate(self.markers):
             for y, val in enumerate(row):
                 if val == 1:
-                    pygame.draw.line(self.screen, self.green, (x * 200 + 15, y * 200 + 15), (x * 200 + 185, y * 200 + 185), self.line_width * 2)
-                    pygame.draw.line(self.screen, self.green, (x * 200 + 15, y * 200 + 185), (x * 200 + 185, y * 200 + 15), self.line_width * 2)
+                    pygame.draw.line(self.screen, self.x_color, (x * 200 + 40, y * 200 + 40), (x * 200 + 160, y * 200 + 160), self.line_width)
+                    pygame.draw.line(self.screen, self.x_color, (x * 200 + 40, y * 200 + 160), (x * 200 + 160, y * 200 + 40), self.line_width)
                 elif val == -1:
-                    pygame.draw.circle(self.screen, self.red, (x * 200 + 100, y * 200 + 100), 85, self.line_width * 2)
+                    pygame.draw.circle(self.screen, self.o_color, (x * 200 + 100, y * 200 + 100), 60, self.line_width)
 
     def check_winner(self):
         lines = list(self.markers)
@@ -62,19 +63,14 @@ class TicTacToe:
             self.winner = 0
 
     def draw_game_over(self):
-        if self.winner != 0:
-            text = f'Player {self.winner} wins!'
-        else:
-            text = "It's a Draw!"
-            
-        img = self.font.render(text, True, self.blue)
-        pygame.draw.rect(self.screen, self.green, (self.screen_width // 2 - 100, self.screen_height // 2 - 60, 200, 50))
-        self.screen.blit(img, (self.screen_width // 2 - 100, self.screen_height // 2 - 50))
+        text = f'Player {self.winner} wins!' if self.winner != 0 else "It's a Draw!"
+        img = self.font.render(text, True, self.text_color)
+        pygame.draw.rect(self.screen, self.panel_color, (self.screen_width // 2 - 100, self.screen_height // 2 - 60, 200, 50), border_radius=8)
+        self.screen.blit(img, (self.screen_width // 2 - 90, self.screen_height // 2 - 50))
         
-        again_text = 'Play Again?'
-        again_img = self.font.render(again_text, True, self.blue)
-        pygame.draw.rect(self.screen, self.green, self.again_rect)
-        self.screen.blit(again_img, (self.screen_width // 2 - 80, self.screen_height // 2 + 20))
+        again_img = self.font.render('Play Again?', True, self.text_color)
+        pygame.draw.rect(self.screen, self.panel_color, self.again_rect, border_radius=8)
+        self.screen.blit(again_img, (self.screen_width // 2 - 75, self.screen_height // 2 + 20))
 
     def handle_click(self, pos):
         if not self.game_over:
