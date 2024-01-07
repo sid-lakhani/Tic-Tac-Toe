@@ -14,6 +14,7 @@ class TicTacToe:
         self.o_color = (255, 85, 85)
         self.text_color = (248, 248, 242)
         self.bg_color = (28, 30, 38)
+        self.hover_color = (38, 40, 50)
         self.grid_color = (68, 71, 90)
         self.panel_color = (40, 42, 54)
         
@@ -24,6 +25,7 @@ class TicTacToe:
 
     def reset_game(self):
         self.markers = [[0, 0, 0] for _ in range(3)]
+        self.animations = [[0.0 for _ in range(3)] for _ in range(3)]
         self.player = 1
         self.winner = 0
         self.game_over = False
@@ -35,14 +37,32 @@ class TicTacToe:
             pygame.draw.line(self.screen, self.grid_color, (0, x * 200), (self.screen_width, x * 200), self.line_width)
             pygame.draw.line(self.screen, self.grid_color, (x * 200, 0), (x * 200, self.screen_height), self.line_width)
 
+    def draw_hover(self):
+        if not self.game_over:
+            pos = pygame.mouse.get_pos()
+            cell_x, cell_y = pos[0] // 200, pos[1] // 200
+            if 0 <= cell_x < 3 and 0 <= cell_y < 3:
+                if self.markers[cell_x][cell_y] == 0:
+                    pygame.draw.rect(self.screen, self.hover_color, (cell_x * 200, cell_y * 200, 200, 200))
+
     def draw_markers(self):
         for x, row in enumerate(self.markers):
             for y, val in enumerate(row):
-                if val == 1:
-                    pygame.draw.line(self.screen, self.x_color, (x * 200 + 40, y * 200 + 40), (x * 200 + 160, y * 200 + 160), self.line_width)
-                    pygame.draw.line(self.screen, self.x_color, (x * 200 + 40, y * 200 + 160), (x * 200 + 160, y * 200 + 40), self.line_width)
-                elif val == -1:
-                    pygame.draw.circle(self.screen, self.o_color, (x * 200 + 100, y * 200 + 100), 60, self.line_width)
+                if val != 0:
+                    prog = self.animations[x][y]
+                    if prog < 1.0:
+                        self.animations[x][y] = min(1.0, prog + 0.1)
+                        prog = self.animations[x][y]
+                    
+                    cx, cy = x * 200 + 100, y * 200 + 100
+                    
+                    if val == 1:
+                        l = 60 * prog
+                        pygame.draw.line(self.screen, self.x_color, (cx - l, cy - l), (cx + l, cy + l), self.line_width)
+                        pygame.draw.line(self.screen, self.x_color, (cx - l, cy + l), (cx + l, cy - l), self.line_width)
+                    elif val == -1:
+                        r = max(self.line_width, int(60 * prog))
+                        pygame.draw.circle(self.screen, self.o_color, (cx, cy), r, self.line_width)
 
     def check_winner(self):
         lines = list(self.markers)
@@ -84,9 +104,11 @@ class TicTacToe:
                 self.reset_game()
 
     def run(self):
+        clock = pygame.time.Clock()
         running = True
         while running:
             self.draw_grid()
+            self.draw_hover()
             self.draw_markers()
             
             for event in pygame.event.get():
@@ -102,6 +124,7 @@ class TicTacToe:
                 self.draw_game_over()
                 
             pygame.display.update()
+            clock.tick(60)
             
         pygame.quit()
         sys.exit()
