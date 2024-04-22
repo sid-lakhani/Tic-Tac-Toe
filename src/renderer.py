@@ -4,14 +4,20 @@ class Renderer:
     def __init__(self, screen_width, screen_height):
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.font = pygame.font.SysFont(None, 40)
         self.line_width = 8
         
-        self.btn_1p = pygame.Rect(self.screen_width // 2 - 140, self.screen_height // 2 - 50, 280, 60)
-        self.btn_2p = pygame.Rect(self.screen_width // 2 - 140, self.screen_height // 2 + 30, 280, 60)
+        # Adjusting layout spacing for the new larger fonts
+        self.btn_1p = pygame.Rect(self.screen_width // 2 - 140, self.screen_height // 2 - 20, 280, 60)
+        self.btn_2p = pygame.Rect(self.screen_width // 2 - 140, self.screen_height // 2 + 60, 280, 60)
+        
         self.btn_retry = pygame.Rect(self.screen_width // 2 - 120, self.screen_height // 2 - 20, 240, 50)
-        self.btn_menu = pygame.Rect(self.screen_width // 2 - 120, self.screen_height // 2 + 45, 240, 50)
-        self.btn_theme = pygame.Rect(self.screen_width - 220, 20, 200, 40)
+        self.btn_menu = pygame.Rect(self.screen_width // 2 - 120, self.screen_height // 2 + 50, 240, 50)
+        
+        self.btn_resume = pygame.Rect(self.screen_width // 2 - 120, self.screen_height // 2 - 40, 240, 50)
+        self.btn_restart = pygame.Rect(self.screen_width // 2 - 120, self.screen_height // 2 + 30, 240, 50)
+        self.btn_pause_menu = pygame.Rect(self.screen_width // 2 - 120, self.screen_height // 2 + 100, 240, 50)
+        
+        self.btn_theme = pygame.Rect(self.screen_width - 250, 20, 230, 40)
         
         self.animations = [[0.0 for _ in range(3)] for _ in range(3)]
 
@@ -24,20 +30,16 @@ class Renderer:
         else:
             display.fill(config['bg_color'])
             
-        title = self.font.render("TIC TAC TOE", True, config['text_color'])
-        display.blit(title, (self.screen_width // 2 - title.get_width() // 2, self.screen_height // 2 - 150))
+        title = config['title_font'].render("TIC TAC TOE", True, config['text_color'])
+        display.blit(title, (self.screen_width // 2 - title.get_width() // 2, self.screen_height // 2 - 160))
         
-        pygame.draw.rect(display, config['panel_color'], self.btn_theme, border_radius=8)
-        theme_font = pygame.font.SysFont(None, 24)
-        theme_text = theme_font.render(f"Theme: {theme}", True, config['text_color'])
+        theme_text = config['small_font'].render(f"Theme: {theme}", True, config['text_color'])
         display.blit(theme_text, (self.btn_theme.centerx - theme_text.get_width() // 2, self.btn_theme.centery - theme_text.get_height() // 2))
         
-        pygame.draw.rect(display, config['panel_color'], self.btn_1p, border_radius=8)
-        text_1p = self.font.render("1 Player (vs AI)", True, config['text_color'])
+        text_1p = config['btn_font'].render("1 Player (vs AI)", True, config['text_color'])
         display.blit(text_1p, (self.btn_1p.centerx - text_1p.get_width() // 2, self.btn_1p.centery - text_1p.get_height() // 2))
         
-        pygame.draw.rect(display, config['panel_color'], self.btn_2p, border_radius=8)
-        text_2p = self.font.render("2 Player", True, config['text_color'])
+        text_2p = config['btn_font'].render("2 Player", True, config['text_color'])
         display.blit(text_2p, (self.btn_2p.centerx - text_2p.get_width() // 2, self.btn_2p.centery - text_2p.get_height() // 2))
 
     def draw_grid(self, display, config):
@@ -101,18 +103,35 @@ class Renderer:
                             r = max(self.line_width, int(60 * prog))
                             pygame.draw.circle(display, config['o_color'], (cx, cy), r, self.line_width)
 
+    def draw_dim_overlay(self, display, config):
+        overlay = pygame.Surface((self.screen_width, self.screen_height), pygame.SRCALPHA)
+        overlay.fill(config.get('overlay_color', (0, 0, 0, 120)))
+        display.blit(overlay, (0, 0))
+
     def draw_game_over(self, display, logic, config):
+        self.draw_dim_overlay(display, config)
+        
         text = f'Player {logic.winner} wins!' if logic.winner != 0 else "It's a Draw!"
-        img = self.font.render(text, True, config['text_color'])
+        img = config['title_font'].render(text, True, config['text_color'])
+        display.blit(img, (self.screen_width // 2 - img.get_width() // 2, self.screen_height // 2 - 120))
         
-        panel_rect = pygame.Rect(self.screen_width // 2 - 160, self.screen_height // 2 - 100, 320, 220)
-        pygame.draw.rect(display, config['panel_color'], panel_rect, border_radius=12)
-        display.blit(img, (self.screen_width // 2 - img.get_width() // 2, self.screen_height // 2 - 80))
-        
-        pygame.draw.rect(display, config['hover_color'], self.btn_retry, border_radius=8)
-        retry_img = self.font.render('Retry', True, config['text_color'])
+        retry_img = config['btn_font'].render('Retry', True, config['text_color'])
         display.blit(retry_img, (self.btn_retry.centerx - retry_img.get_width() // 2, self.btn_retry.centery - retry_img.get_height() // 2))
 
-        pygame.draw.rect(display, config['hover_color'], self.btn_menu, border_radius=8)
-        menu_img = self.font.render('Menu', True, config['text_color'])
+        menu_img = config['btn_font'].render('Menu', True, config['text_color'])
         display.blit(menu_img, (self.btn_menu.centerx - menu_img.get_width() // 2, self.btn_menu.centery - menu_img.get_height() // 2))
+
+    def draw_pause_menu(self, display, config):
+        self.draw_dim_overlay(display, config)
+        
+        title = config['title_font'].render("PAUSED", True, config['text_color'])
+        display.blit(title, (self.screen_width // 2 - title.get_width() // 2, self.screen_height // 2 - 150))
+        
+        resume = config['btn_font'].render("Resume", True, config['text_color'])
+        display.blit(resume, (self.btn_resume.centerx - resume.get_width() // 2, self.btn_resume.centery - resume.get_height() // 2))
+
+        restart = config['btn_font'].render("Restart", True, config['text_color'])
+        display.blit(restart, (self.btn_restart.centerx - restart.get_width() // 2, self.btn_restart.centery - restart.get_height() // 2))
+
+        menu = config['btn_font'].render("Menu", True, config['text_color'])
+        display.blit(menu, (self.btn_pause_menu.centerx - menu.get_width() // 2, self.btn_pause_menu.centery - menu.get_height() // 2))

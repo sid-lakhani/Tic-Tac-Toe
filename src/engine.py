@@ -66,6 +66,18 @@ class GameEngine:
                 self.state = 'PLAYING'
                 self.logic.reset(vs_ai=False)
                 self.renderer.reset_animations()
+        elif self.state == 'PAUSED':
+            if self.renderer.btn_resume.collidepoint(pos):
+                self.play_sound(self.click_sfx)
+                self.state = 'PLAYING'
+            elif self.renderer.btn_restart.collidepoint(pos):
+                self.play_sound(self.click_sfx)
+                self.state = 'PLAYING'
+                self.logic.reset(vs_ai=self.logic.vs_ai)
+                self.renderer.reset_animations()
+            elif self.renderer.btn_pause_menu.collidepoint(pos):
+                self.play_sound(self.click_sfx)
+                self.state = 'MENU'
         elif self.state == 'PLAYING':
             if not self.logic.game_over:
                 if self.logic.vs_ai and self.logic.player == -1:
@@ -95,6 +107,10 @@ class GameEngine:
         while running:
             if self.state == 'MENU':
                 self.renderer.draw_menu(self.display, self.theme_manager.get_current_theme_name(), self.theme_config)
+            elif self.state == 'PAUSED':
+                self.renderer.draw_grid(self.display, self.theme_config)
+                self.renderer.draw_markers(self.display, self.logic, self.theme_config)
+                self.renderer.draw_pause_menu(self.display, self.theme_config)
             else:
                 self.renderer.draw_grid(self.display, self.theme_config)
                 self.renderer.draw_hover(self.display, self.logic, pygame.mouse.get_pos(), self.theme_config)
@@ -116,6 +132,12 @@ class GameEngine:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        if self.state == 'PLAYING' and not self.logic.game_over:
+                            self.state = 'PAUSED'
+                        elif self.state == 'PAUSED':
+                            self.state = 'PLAYING'
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     self.clicked = True
                 elif event.type == pygame.MOUSEBUTTONUP and self.clicked:

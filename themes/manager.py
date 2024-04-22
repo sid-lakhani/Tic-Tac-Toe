@@ -22,20 +22,26 @@ class ThemeManager:
         
         # UI Colors
         if name == 'Blackboard':
+            config['font_path'] = os.path.join('assets', 'fonts', 'patrickhand.ttf')
             config['text_color'] = (248, 248, 242)
             config['bg_color'] = (30, 45, 35)
+            config['overlay_color'] = (0, 0, 0, 150)
             config['hover_color'] = (45, 65, 50)
             config['grid_color'] = (100, 120, 110)
             config['panel_color'] = (40, 60, 45)
         elif name == 'Whiteboard':
+            config['font_path'] = os.path.join('assets', 'fonts', 'kalam.ttf')
             config['text_color'] = (40, 42, 54)
             config['bg_color'] = (250, 250, 250)
+            config['overlay_color'] = (255, 255, 255, 180)
             config['hover_color'] = (230, 230, 240)
             config['grid_color'] = (200, 200, 210)
             config['panel_color'] = (240, 240, 245)
         elif name == 'Paper':
+            config['font_path'] = os.path.join('assets', 'fonts', 'indieflower.ttf')
             config['text_color'] = (40, 40, 40)
             config['bg_color'] = (245, 235, 220)
+            config['overlay_color'] = (255, 255, 255, 180)
             config['hover_color'] = (235, 220, 200)
             config['grid_color'] = (160, 180, 210)
             config['panel_color'] = (255, 250, 240)
@@ -59,5 +65,15 @@ class ThemeManager:
             config['x_img'] = self.assets[folder_name]['x']
             config['o_img'] = self.assets[folder_name]['o']
             config['grid_img'] = self.assets[folder_name]['grid']
+            
+        try:
+            config['title_font'] = pygame.font.Font(config['font_path'], 70)
+            config['btn_font'] = pygame.font.Font(config['font_path'], 35)
+            config['small_font'] = pygame.font.Font(config['font_path'], 24)
+        except Exception as e:
+            print("Font error:", e)
+            config['title_font'] = pygame.font.SysFont(None, 70)
+            config['btn_font'] = pygame.font.SysFont(None, 35)
+            config['small_font'] = pygame.font.SysFont(None, 24)
 
         return config
