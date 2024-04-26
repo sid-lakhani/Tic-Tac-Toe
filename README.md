@@ -1,74 +1,68 @@
-# Tic Tac Toe Game
+# Tic Tac Toe
 
-A simple Tic Tac Toe game built using Pygame.
-
-## Description
-
-This is a basic implementation of the classic Tic Tac Toe game created with Python and Pygame. It features a graphical user interface where two players can take turns to play the game.
+A premium, highly-polished implementation of the classic Tic Tac Toe game built with Python and Pygame. It features a complete modular architecture, an unbeatable AI, and dynamic graphical themes.
 
 ## Features
 
-- Two-player gameplay
-- Graphical user interface (GUI)
-- Win detection and game-over condition
+- **Game Modes**: 
+  - **1 Player**: Test your skills against an unbeatable Minimax AI.
+  - **2 Player**: Play locally with a friend.
+- **Dynamic Themes**: 
+  - **Whiteboard**: Dry-erase marker style
+  - **Blackboard**: Chalk style
+  - **Paper**: Ballpoint pen style
+- **Interface & Mechanics**: 
+  - Smooth scale-in animations and screen-shake effects
+  - Audio SFX integration for clicks and wins
+  - Integrated pause menu (press `ESC`)
+  - Authentic hand-drawn aesthetic
 
 ## Usage
 
 ### For Windows:
-1. Download the executable file: [tictactoe.exe](https://github.com/sid-lakhani/Tic-Tac-Toe/releases/download/tic-tac-toe/tictactoe.exe)
-2. Run the downloaded executable to start the game.
+You don't need to install Python! Just download the standalone executable:
+1. Go to the [Releases](https://github.com/sid-lakhani/Tic-Tac-Toe/releases) tab.
+2. Download the latest `TicTacToe.exe`.
+3. Run it directly! (It is automatically built and bundled via GitHub Actions).
 
 ### For Linux / macOS (Running from source):
-Since there is no pre-built executable for Linux, you can easily run the game directly from the source code.
-
 1. **Install System Dependencies (Linux only):**
    To ensure `pygame` compiles and runs flawlessly without missing font or audio modules, install the required SDL libraries first.
    - For **Arch Linux**: `sudo pacman -S sdl2 sdl2_image sdl2_ttf sdl2_mixer`
    - For **Ubuntu/Debian**: `sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev`
 
-2. Clone the repository and navigate into it:
+2. **Clone the repository:**
    ```bash
-   git clone https://github.com/sid-lakhani/tic-tac-toe.git
-   cd tic-tac-toe
+   git clone https://github.com/sid-lakhani/Tic-Tac-Toe.git
+   cd Tic-Tac-Toe
    ```
 
-3. (Optional but recommended) Create and activate a virtual environment:
+3. **Set up a virtual environment (Optional but recommended):**
    ```bash
    python3 -m venv venv
-   source venv/bin/activate  # For bash/zsh
-   # source venv/bin/activate.fish  # For Fish shell
+   source venv/bin/activate
    ```
 
-4. Install the Python dependencies:
+4. **Install dependencies:**
    ```bash
-   pip install --no-cache-dir pygame
-   ```
-   *(Note: `--no-cache-dir` guarantees a fresh, rock-solid build with the newly installed SDL libraries)*
-
-5. Run the game:
-   ```bash
-   python3 tictactoe.py
+   pip install -r requirements.txt
    ```
 
-## Development
-
-If you want to contribute or make modifications to the game, follow these steps:
-
-1. Clone the repository:
-
+5. **Run the game:**
    ```bash
-   git clone https://github.com/sid-lakhani/tic-tac-toe.git
+   python3 main.py
+   ```
 
-2. Install the necessary dependencies:
+## Development & Architecture
 
-   ```bash
-   pip install pygame
-   
-3. Make your changes to the code.
+This project is built using a clean, scalable MVC-style architecture.
 
-4. Test your changes locally:
+- `main.py`: The entry point.
+- `src/engine.py`: The orchestrator handling the main game loop, event polling, state management (`MENU`, `PLAYING`, `PAUSED`), and haptics.
+- `src/renderer.py`: Encapsulates all Pygame drawing logic, alpha-blending, animations, and typography.
+- `src/logic.py`: Contains the pure state of the game (the board, win detection, current player).
+- `src/ai.py`: Implements the Minimax algorithm for the unbeatable AI opponent.
+- `themes/manager.py`: Handles dynamic loading of assets and custom Google Fonts on the fly.
 
-   ```bash
-   python tictactoe.py
-
-5. If everything works as expected, create a pull request to submit your changes.
+### Automating Windows Builds
+The Windows `.exe` is automatically built by GitHub Actions every time a new Release is published on GitHub. Check `.github/workflows/release.yml` for the CI/CD configuration.
